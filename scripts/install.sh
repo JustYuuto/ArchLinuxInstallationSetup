@@ -29,6 +29,10 @@ step () {
     echo $line
 }
 
+question () {
+    echo -e "${bold_white}> ${reset}$1"
+}
+
 # END Functions
 
 # Check if setup is running on Arch Linux
@@ -71,20 +75,21 @@ step "Disk Partitionning"
 
 echo ""
 
-sudo fdisk -l
+echo -e "${bold_white}Disks list:${reset}"
+sudo lsblk
 
-echo -e "\nOn which disk do you want to install Arch Linux?"
+echo ""
+question "On which disk do you want to install Arch Linux?"
 read disk_to_install
+echo ""
 
-ls -la /dev
+if [[ $(grep "$disk_to_install" /etc/mtab) == "" || "$disk_to_install" != "/dev/"* ]] ; then
+    echo -e "${bold_red}The selected disk does not exist! ${red}Please choose another disk.${reset}"
+else
+    echo -e "Partitionning ${bold_white}${disk_to_install}${reset}..."
 
-if [ ! -d "$disk_to_install" ] ; then
-    echo -e "${bold_red}The selected disk does not exist! ${red}Please choose another disk.${reset} (This message can show by error; if your disk exists, continue)"
+    echo -e "Formatting partitions..."
+    #mkfs.ext4 /dev/root_partition
+    #mkswap /dev/swap_partition
+    #mkfs.fat -F 32 /dev/efi_system_partition
 fi
-
-echo -e "Partitionning ${bold_white}${disk_to_install}${reset}..."
-
-echo -e "Formatting partitions..."
-#mkfs.ext4 /dev/root_partition
-#mkswap /dev/swap_partition
-#mkfs.fat -F 32 /dev/efi_system_partition
