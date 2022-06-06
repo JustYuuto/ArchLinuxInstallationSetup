@@ -69,7 +69,8 @@ else
 fi
 
 timedatectl set-ntp true
-echo ""
+
+sleep 3
 
 ######################################################################################
 
@@ -89,7 +90,7 @@ question "On which disk do you want to install Arch Linux?"
 read disk_to_install
 echo ""
 
-if [[ $(grep "$disk_to_install" /etc/mtab) == "" || "$disk_to_install" != "/dev/"* ]] ; then
+if [[ "$disk_to_install" != "/dev/"* ]] ; then
     echo -e "${bold_red}The selected disk does not exist! ${red}Please choose another disk.${reset}"
 else
     echo -e "Partitionning ${bold_white}${disk_to_install}${reset}..."
