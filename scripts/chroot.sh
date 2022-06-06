@@ -53,7 +53,6 @@ read locale
 sed -i "s/# ${locale}.UTF-8 UTF-8/${locale}.UTF-8 UTF-8/g" /etc/locale.gen
 
 echo ""
-echo "Generating locales..."
 
 locale-gen
 
@@ -86,16 +85,24 @@ passwd
 step "Bootloader"
 
 amdcpu() {
-  cpu = $(grep -m 1 'model name' /proc/cpuinfo | cut -d ":" -f 2)
+  cpu=$(grep -m 1 'model name' /proc/cpuinfo | cut -d ":" -f 2)
   if [ cpu == " AMD"* ] ; then
     return 1
   else
     return 0
   fi
 }
-echo 
+echo amdcpu
 
 if [ amdcpu = 1 ] ; then
   echo "${bold_white}[${bold_blue}INFO${bold_white}]${reset} Setup detected you're using an AMD CPU. Before installing the bootloader, the \"amd-ucode\" package needs to be installed."
   pacman -S --noconfirm amd-ucode
 fi
+
+echo ""
+echo "Currently, the setup use GRUB as the bootloader, and this is the only possibility. If you want to add a bootloader, create an issue: https://github.com/NetherMCtv/ArchLinuxInstallationSetup/issues"
+
+echo ""
+echo "Downloading and installing GRUB and OS-prober"
+
+pacman -S --noconfirm grub os-prober
