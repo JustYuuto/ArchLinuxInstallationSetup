@@ -50,7 +50,7 @@ step "Localization"
 question "What lang will you use?"
 read locale
 
-sed -i "s/# ${locale}.UTF-8 UTF-8/${locale}.UTF-8 UTF-8/g" /etc/locale.gen
+sed -i "s/#${locale}.UTF-8 UTF-8/${locale}.UTF-8 UTF-8/g" /etc/locale.gen
 
 echo ""
 
@@ -105,4 +105,8 @@ echo "Currently, the setup use GRUB as the bootloader, and this is the only poss
 echo ""
 echo "Downloading and installing GRUB and OS-prober"
 
-pacman -S --noconfirm grub os-prober
+pacman -S --noconfirm grub os-prober efibootmgr
+
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id="Arch Linux"
+
+grub-mkconfig -o /boot/grub/grub.cfg
