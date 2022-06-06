@@ -85,6 +85,7 @@ echo -e "${bold_white}Disks list:${reset}"
 lsblk
 
 echo ""
+echo -e "${bold_red}WARNING: THE DISK WILL BE FORMATED! ALL DATA ON IT WILL BE LOST!${reset}"
 question "On which disk do you want to install Arch Linux?"
 read disk_to_install
 echo ""
@@ -104,9 +105,9 @@ else
     echo -e "Disk successfully partitionned without errors."
 
     echo -e "Formatting partitions..."
-    #mkfs.ext4 "${disk_to_install}3"
-    #mkswap "${disk_to_install}2"
-    #mkfs.fat -F 32 "${disk_to_install}1"
+    mkfs.ext4 "${disk_to_install}3"
+    mkswap "${disk_to_install}2"
+    mkfs.fat -F 32 "${disk_to_install}1"
 fi
 
 echo -e "Mounting ${bold_white}${disk_to_install}3${reset} (FS) to ${bold_white}/mnt${reset}..."
