@@ -29,7 +29,6 @@ step () {
 
 question () {
     echo -e "${bold_white}> ${reset}$1"
-    echo ""
 }
 
 ######################################################################################
@@ -87,37 +86,39 @@ lsblk
 echo ""
 echo -e "${bold_red}WARNING: THE DISK WILL BE FORMATED! ALL DATA ON IT WILL BE LOST!${reset}"
 question "On which disk do you want to install Arch Linux?"
-read -t 9999999 disk_to_install
+while true ; do
+    read -t 9999999 disk
+    case $disk in
+        "/dev/sd"* | "/dev/nvme"*) selected=1; break;;
+        *) echo -e "${bold_red}The selected disk does not exist! ${red}Please choose another disk.${reset}"; selected=0; ;;
+    esac
+done
 
 echo ""
 
-if [[ "$disk_to_install" != "/dev/"* ]] ; then
-    echo -e "${bold_red}The selected disk does not exist! ${red}Please choose another disk.${reset}"
+echo -e "Partitionning ${bold_white}${disk}${reset}..."
+
+if [ $is_uefi == 1 ] ; then
+    parted $disk mklabel gpt
 else
-    echo -e "Partitionning ${bold_white}${disk_to_install}${reset}..."
-
-    if [ $is_uefi == 1 ] ; then
-        parted $disk_to_install mklabel gpt
-    else
-        parted $disk_to_install mklabel mbr
-    fi
-    parted $disk_to_install version
-
-    echo -e "Disk successfully partitionned without errors."
-
-    echo -e "Formatting partitions..."
-    mkfs.ext4 "${disk_to_install}3"
-    mkswap "${disk_to_install}2"
-    mkfs.fat -F 32 "${disk_to_install}1"
+    parted $disk mklabel msdos # mbr
 fi
+parted $disk version
 
-echo -e "Mounting ${bold_white}${disk_to_install}3${reset} (FS) to ${bold_white}/mnt${reset}..."
-mount "${disk_to_install}3" /mnt
+echo -e "Disk successfully partitionned without errors."
 
-echo -e "Mounting ${bold_white}${disk_to_install}1${reset} (ESP) to ${bold_white}/mnt/boot${reset}..."
-mount "${disk_to_install}1" /mnt/boot
+echo -e "Formatting partitions..."
+mkfs.ext4 "${disk}3"
+mkswap "${disk}2"
+mkfs.fat -F 32 "${disk}1"
 
-swapon /dev/sda2
+echo -e "Mounting ${bold_white}${disk}3${reset} (FS) to ${bold_white}/mnt${reset}..."
+mount "${disk}3" /mnt
+
+echo -e "Mounting ${bold_white}${disk}1${reset} (ESP) to ${bold_white}/mnt/boot${reset}..."
+mount --mkdir "${disk}1" /mnt/boot
+
+swapon "${disk}2"
 
 ######################################################################################
 
