@@ -87,7 +87,7 @@ step "Bootloader"
 
 amdcpu() {
   cpu = $(grep -m 1 'model name' /proc/cpuinfo | cut -d ":" -f 2)
-  if [ cpu == "" ] ; then
+  if [ cpu == " AMD"* ] ; then
     return 1
   else
     return 0
