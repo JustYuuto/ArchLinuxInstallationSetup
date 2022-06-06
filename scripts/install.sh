@@ -88,6 +88,7 @@ lsblk
 echo ""
 echo -e "${bold_red}WARNING: THE DISK WILL BE FORMATED! ALL DATA ON IT WILL BE LOST!${reset}"
 question "On which disk do you want to install Arch Linux?" disk_to_install
+
 echo ""
 
 if [[ "$disk_to_install" != "/dev/"* ]] ; then
