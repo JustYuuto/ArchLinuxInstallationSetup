@@ -32,9 +32,9 @@ question () {
     echo -e "${bold_white}> ${reset}$1"
 }
 
-step "Date and time"
+######################################################################################
 
-echo ""
+step "Date and time"
 
 question "What is your timezone?"
 read timezone
@@ -42,6 +42,8 @@ read timezone
 ls -sf "/usr/share/zoneinfo/${timezone}" /etc/localtime
 
 hwclock --systohc
+
+######################################################################################
 
 step "Localization"
 
