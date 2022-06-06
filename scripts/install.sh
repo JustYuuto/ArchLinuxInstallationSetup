@@ -27,6 +27,7 @@ step () {
 }
 
 question () {
+    sleep 5
     echo -e "${bold_white}> ${reset}$1"
     echo ""
 }
@@ -61,25 +62,23 @@ echo ""
 ######################################################################################
 
 if [ -d "/sys/firmware/efi/efivars" ] ; then
-    echo -e "${bold_blue}INFO:${reset} Arch ISO booted in UEFI mode"
+    echo -e "${bold_white}[${bold_blue}INFO${bold_white}]${reset} Arch ISO booted in UEFI mode"
     is_uefi=1
 else
-    echo -e "${bold_blue}INFO:${reset} Arch ISO booted in BIOS mode"
+    echo -e "${bold_white}[${bold_blue}INFO${bold_white}]${reset} Arch ISO booted in BIOS mode"
     is_uefi=0
 fi
 
 timedatectl set-ntp true
-
-sleep 5
 
 ######################################################################################
 
 step "Disk Partitionning"
 
 # NOTES:
-# /dev/sda1 is the ESP
-# /dev/sda2 is the Swap Partition
-# /dev/sda3 is the Linux FS Partition
+# {DISK}1 is the ESP
+# {DISK}2 is the Swap Partition
+# {DISK}3 is the Linux FS Partition
 
 echo ""
 echo -e "${bold_white}Disks list:${reset}"
@@ -118,8 +117,6 @@ mount "${disk_to_install}1" /mnt/boot
 
 swapon /dev/sda2
 
-sleep 5
-
 ######################################################################################
 
 step "Packages installation"
@@ -131,8 +128,6 @@ pacstrap /mnt base linux linux-firmware dhcpcd man-db
 
 echo -e "${bold_white}All the packages were successfully downloaded!${reset}"
 
-sleep 5
-
 ######################################################################################
 
 step "Fstab"
@@ -142,11 +137,9 @@ echo -e "Generating fstab..."
 
 genfstab -U /mnt >> /mnt/etc/fstab
 
-sleep 5
-
 ######################################################################################
 
 step "Chroot"
 
-chroot_script_cmd = curl -s https://raw.githubusercontent.com/NetherMCtv/ArchLinuxInstallationSetup/latest/scripts/chroot.sh; chmod +x ./chroot.sh
+chroot_script_cmd=curl -s https://raw.githubusercontent.com/NetherMCtv/ArchLinuxInstallationSetup/latest/scripts/chroot.sh; chmod +x ./chroot.sh
 arch-chroot /mnt "${chroot_script_cmd}"
