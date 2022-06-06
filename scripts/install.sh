@@ -126,7 +126,7 @@ echo -e "${bold_red}Do not touch any keys during the packages are downloading!${
 
 pacstrap /mnt base linux linux-firmware dhcpcd man-db
 
-echo -e "${bold_white}All the packages were successfully downloaded!"
+echo -e "${bold_white}All the packages were successfully downloaded!${reset}"
 
 ######################################################################################
 
