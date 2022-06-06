@@ -25,6 +25,7 @@ step () {
 
     echo -e "${bold_white}${name}${reset}"
     echo $line
+    echo ""
 }
 
 question () {
@@ -79,7 +80,6 @@ step "Disk Partitionning"
 # {DISK}2 is the Swap Partition
 # {DISK}3 is the Linux FS Partition
 
-echo ""
 echo -e "${bold_white}Disks list:${reset}"
 lsblk
 
@@ -133,7 +133,6 @@ swapon "${disk}2"
 
 step "Packages installation"
 
-echo ""
 echo -e "${bold_red}Do not touch any keys during the packages are downloading!${reset}"
 
 pacstrap /mnt base linux linux-firmware dhcpcd man-db
@@ -147,6 +146,8 @@ step "Fstab"
 echo -e "Generating fstab..."
 
 genfstab -U /mnt >> /mnt/etc/fstab
+
+echo -e "Fstab generated"
 
 ######################################################################################
 

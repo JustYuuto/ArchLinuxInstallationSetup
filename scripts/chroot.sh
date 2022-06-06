@@ -1,5 +1,37 @@
 #!/bin/env /usr/bin/bash
 
+reset="\033[0m"
+
+blue="\033[0;34m"
+red="\033[0;31m"
+
+bold_white="\033[1;37m"
+bold_blue="\033[1;34m"
+bold_red="\033[1;31m"
+bold_green="\033[1;32m"
+
+######################################################################################
+
+step () {
+    sleep 5
+    clear
+
+    name=$1
+    line=""
+
+    for (( i=0; i<${#name}; i++ )) ; do
+        line+="="
+    done
+
+    echo -e "${bold_white}${name}${reset}"
+    echo $line
+    echo ""
+}
+
+question () {
+    echo -e "${bold_white}> ${reset}$1"
+}
+
 step "Date and time"
 
 echo ""
