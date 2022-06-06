@@ -1,7 +1,5 @@
 #!/bin/env /usr/bin/bash
 
-# Colors
-
 reset="\033[0m"
 
 blue="\033[0;34m"
@@ -10,10 +8,9 @@ red="\033[0;31m"
 bold_white="\033[1;37m"
 bold_blue="\033[1;34m"
 bold_red="\033[1;31m"
+bold_green="\033[1;32m"
 
-# END Colors
-
-# Functions
+######################################################################################
 
 step () {
     clear
@@ -31,9 +28,10 @@ step () {
 
 question () {
     echo -e "${bold_white}> ${reset}$1"
+    echo ""
 }
 
-# END Functions
+######################################################################################
 
 # Check if setup is running on Arch Linux
 #if [ uname != "Arch Linux" ] ; then
@@ -50,7 +48,7 @@ question () {
 
 clear
 
-# Header
+######################################################################################
 
 echo "#######################################################"
 echo
@@ -60,23 +58,31 @@ echo
 echo "#######################################################"
 echo ""
 
-# END Header
+######################################################################################
 
 if [ -d "/sys/firmware/efi/efivars" ] ; then
-    echo -e "${bold_blue}INFO:${reset} The Arch ISO is booted in UEFI mode"
+    echo -e "${bold_blue}INFO:${reset} Arch ISO booted in UEFI mode"
+    is_uefi=1
 else
-    echo -e "${bold_blue}INFO:${reset} The Arch ISO is booted in BIOS mode"
+    echo -e "${bold_blue}INFO:${reset} Arch ISO booted in BIOS mode"
+    is_uefi=0
 fi
 
 timedatectl set-ntp true
 echo ""
 
+######################################################################################
+
 step "Disk Partitionning"
 
-echo ""
+# NOTES:
+# /dev/sda1 is the ESP
+# /dev/sda2 is the Swap Partition
+# /dev/sda3 is the Linux FS Partition
 
+echo ""
 echo -e "${bold_white}Disks list:${reset}"
-sudo lsblk
+lsblk
 
 echo ""
 question "On which disk do you want to install Arch Linux?"
@@ -88,8 +94,52 @@ if [[ $(grep "$disk_to_install" /etc/mtab) == "" || "$disk_to_install" != "/dev/
 else
     echo -e "Partitionning ${bold_white}${disk_to_install}${reset}..."
 
+    if [ $is_uefi == 1 ] ; then
+        parted $disk_to_install mklabel gpt
+    else
+        parted $disk_to_install mklabel mbr
+    fi
+    parted $disk_to_install version
+
+    echo -e "Disk successfully partitionned without errors."
+
     echo -e "Formatting partitions..."
-    #mkfs.ext4 /dev/root_partition
-    #mkswap /dev/swap_partition
-    #mkfs.fat -F 32 /dev/efi_system_partition
+    #mkfs.ext4 "${disk_to_install}3"
+    #mkswap "${disk_to_install}2"
+    #mkfs.fat -F 32 "${disk_to_install}1"
 fi
+
+echo -e "Mounting ${bold_white}${disk_to_install}3${reset} (FS) to ${bold_white}/mnt${reset}..."
+mount "${disk_to_install}3" /mnt
+
+echo -e "Mounting ${bold_white}${disk_to_install}1${reset} (ESP) to ${bold_white}/mnt/boot${reset}..."
+mount "${disk_to_install}1" /mnt/boot
+
+swapon /dev/sda2
+
+######################################################################################
+
+step "Packages installation"
+
+echo ""
+echo -e "${bold_red}Do not touch any keys during the packages are downloading!${reset}"
+
+pacstrap /mnt base linux linux-firmware dhcpcd man-db
+
+echo -e "${bold_white}All the packages were successfully downloaded!"
+
+######################################################################################
+
+step "Fstab"
+
+echo ""
+echo -e "Generating fstab..."
+
+genfstab -U /mnt >> /mnt/etc/fstab
+
+######################################################################################
+
+step "Chroot"
+
+chroot_script_cmd = curl -s https://raw.githubusercontent.com/NetherMCtv/ArchLinuxInstallationSetup/latest/scripts/chroot.sh; chmod +x ./chroot.sh
+arch-chroot /mnt "${chroot_script_cmd}"
