@@ -30,6 +30,7 @@ step () {
 question () {
     echo -e "${bold_white}> ${reset}$1"
     echo ""
+    read "$1" # $1 is the variable
 }
 
 ######################################################################################
@@ -86,8 +87,7 @@ lsblk
 
 echo ""
 echo -e "${bold_red}WARNING: THE DISK WILL BE FORMATED! ALL DATA ON IT WILL BE LOST!${reset}"
-question "On which disk do you want to install Arch Linux?"
-read disk_to_install
+question "On which disk do you want to install Arch Linux?" disk_to_install
 echo ""
 
 if [[ "$disk_to_install" != "/dev/"* ]] ; then
