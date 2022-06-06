@@ -14,7 +14,7 @@ bold_green="\033[1;32m"
 
 step () {
     sleep 5
-    #clear
+    clear
 
     name=$1
     line=""
@@ -103,7 +103,16 @@ if [ $is_uefi == 1 ] ; then
 else
     parted $disk mklabel msdos # mbr
 fi
-parted $disk version
+
+# ESP               Type    Filesystem  Start  End
+parted $disk mkpart primary fat32       1MiB   300MiB
+parted $disk set 1 esp on
+
+# Swap partition (4 GiB)
+parted $disk mkpart primary linux-swap  300MiB 4396MiB
+
+# FS
+parted $disk mkpart primary ext4        4396MiB
 
 echo -e "Disk successfully partitionned without errors."
 
@@ -135,7 +144,6 @@ echo -e "${bold_white}All the packages were successfully downloaded!${reset}"
 
 step "Fstab"
 
-echo ""
 echo -e "Generating fstab..."
 
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -144,5 +152,9 @@ genfstab -U /mnt >> /mnt/etc/fstab
 
 step "Chroot"
 
-chroot_script_cmd=$(curl -s https://raw.githubusercontent.com/NetherMCtv/ArchLinuxInstallationSetup/latest/scripts/chroot.sh; chmod +x ./chroot.sh)
+chroot_script_cmd=$(
+    curl -s https://raw.githubusercontent.com/NetherMCtv/ArchLinuxInstallationSetup/latest/scripts/chroot.sh -o chroot.sh;
+    chmod +x ./chroot.sh;
+    ./chroot.sh
+)
 arch-chroot /mnt "${chroot_script_cmd}"
