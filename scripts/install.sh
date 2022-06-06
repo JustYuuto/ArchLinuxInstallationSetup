@@ -87,7 +87,7 @@ lsblk
 echo ""
 echo -e "${bold_red}WARNING: THE DISK WILL BE FORMATED! ALL DATA ON IT WILL BE LOST!${reset}"
 question "On which disk do you want to install Arch Linux?"
-read disk_to_install -t 9999999
+read -t 9999999 disk_to_install
 
 echo ""
 
