@@ -70,7 +70,7 @@ fi
 
 timedatectl set-ntp true
 
-sleep 3
+sleep 5
 
 ######################################################################################
 
@@ -118,6 +118,8 @@ mount "${disk_to_install}1" /mnt/boot
 
 swapon /dev/sda2
 
+sleep 5
+
 ######################################################################################
 
 step "Packages installation"
@@ -129,6 +131,8 @@ pacstrap /mnt base linux linux-firmware dhcpcd man-db
 
 echo -e "${bold_white}All the packages were successfully downloaded!${reset}"
 
+sleep 5
+
 ######################################################################################
 
 step "Fstab"
@@ -137,6 +141,8 @@ echo ""
 echo -e "Generating fstab..."
 
 genfstab -U /mnt >> /mnt/etc/fstab
+
+sleep 5
 
 ######################################################################################
 
