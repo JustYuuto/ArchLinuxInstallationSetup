@@ -6,3 +6,6 @@ A script for installing Arch Linux
 
 On an Arch Linux machine booted on the Arch ISO, run this command:
 
+```bash
+curl -sL https://bit.ly/ArchSetup | bash
+```
