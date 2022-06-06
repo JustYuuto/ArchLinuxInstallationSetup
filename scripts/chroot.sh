@@ -39,7 +39,7 @@ step "Date and time"
 question "What is your timezone?"
 read timezone
 
-ls -sf "/usr/share/zoneinfo/${timezone}" /etc/localtime
+ln -sf "/usr/share/zoneinfo/${timezone}" /etc/localtime
 
 hwclock --systohc
 
@@ -47,8 +47,8 @@ hwclock --systohc
 
 step "Localization"
 
-question "What lang(s) will you use?"
-read langs
+question "What lang will you use?"
+read locale
 
 sed -i "s/# ${locale}.UTF-8 UTF-8/${locale}.UTF-8 UTF-8/g" /etc/locale.gen
 
@@ -61,7 +61,7 @@ echo "Setting the system locale..."
 
 echo "LANG=${locale}.UTF-8
 LANGUAGE=${locale}.UTF-8
-LC_ALL=${locale}.UTF-8" >> /etc/locale.conf
+LC_ALL=${locale}.UTF-8" > /etc/locale.conf
 
 localectl set-locale LANG=${locale}.UTF-8
 
@@ -69,10 +69,10 @@ localectl set-locale LANG=${locale}.UTF-8
 
 step "Hostname"
 
-question "Enter the hostname desired:                   user@${bold_white}hostname${reset}"
+question "Enter the hostname desired:         user@${bold_white}hostname${reset}"
 read hostname
 
-echo "${hostname}" >> /etc/hostname
+echo "${hostname}" > /etc/hostname
 
 ######################################################################################
 
