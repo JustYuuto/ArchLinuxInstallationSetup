@@ -154,8 +154,8 @@ echo -e "Fstab generated"
 step "Chroot"
 
 chroot_script_cmd="
-curl -s https://raw.githubusercontent.com/NetherMCtv/ArchLinuxInstallationSetup/latest/scripts/chroot.sh -o chroot.sh;
-chmod +x ./chroot.sh;
+curl -s https://raw.githubusercontent.com/NetherMCtv/ArchLinuxInstallationSetup/latest/scripts/chroot.sh -o chroot.sh; 
+chmod +x ./chroot.sh; 
 ./chroot.sh
 "
-arch-chroot /mnt "${chroot_script_cmd}"
+arch-chroot /mnt "sh -c \"$(${chroot_script_cmd//\n})\""
