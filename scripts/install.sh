@@ -141,5 +141,5 @@ genfstab -U /mnt >> /mnt/etc/fstab
 
 step "Chroot"
 
-chroot_script_cmd=curl -s https://raw.githubusercontent.com/NetherMCtv/ArchLinuxInstallationSetup/latest/scripts/chroot.sh; chmod +x ./chroot.sh
+chroot_script_cmd=$(curl -s https://raw.githubusercontent.com/NetherMCtv/ArchLinuxInstallationSetup/latest/scripts/chroot.sh; chmod +x ./chroot.sh)
 arch-chroot /mnt "${chroot_script_cmd}"
