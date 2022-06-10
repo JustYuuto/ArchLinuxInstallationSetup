@@ -89,7 +89,7 @@ question "On which disk do you want to install Arch Linux?"
 while true ; do
     read disk
     case $disk in
-        "/dev/sd"* | "/dev/nvme"*) ; break;;
+        "/dev/sd"* | "/dev/nvme"*) break;;
         *) echo -e "${bold_red}The selected disk does not exist! ${red}Please choose another disk.${reset}"; ;;
     esac
 done
