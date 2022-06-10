@@ -87,14 +87,14 @@ step "Bootloader"
 cpu=$(grep -m 1 'model name' /proc/cpuinfo | cut -d ":" -f 2)
 
 if [ cpu == " AMD"* ] ; then
-  amdcpu=1
+    amdcpu=1
 else
-  amdcpu=0
+    amdcpu=0
 fi
 
 if [ amdcpu == 1 ] ; then
-  echo "${bold_white}[${bold_blue}INFO${bold_white}]${reset} Setup detected you're using an AMD CPU. Before installing the bootloader, the \"amd-ucode\" package needs to be installed."
-  pacman -S --noconfirm amd-ucode
+    echo "${bold_white}[${bold_blue}INFO${bold_white}]${reset} Setup detected you're using an AMD CPU. Before installing the bootloader, the \"amd-ucode\" package needs to be installed."
+    pacman -S --noconfirm amd-ucode
 fi
 
 echo ""
@@ -113,6 +113,11 @@ mkdir -p /boot/efi/EFI
 
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id="Arch Linux" --recheck
 
-sed -i "s/#GRUB_DISABLE_OS_PROBER=/${locale}.UTF-8 UTF-8/g" /etc/default/grub
+question "Enable including other OSes in GRUB boot list? [y/n]"
+read osprober
+
+if [ osprober == "y" ] ; then
+    sed -i "s/#GRUB_DISABLE_OS_PROBER/GRUB_DISABLE_OS_PROBER/g" /etc/default/grub
+fi
 
 grub-mkconfig -o /boot/grub/grub.cfg
