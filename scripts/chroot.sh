@@ -34,6 +34,12 @@ question () {
 
 ######################################################################################
 
+step "Enabling services"
+
+systemctl enable dhcpcd
+
+######################################################################################
+
 step "Date and time"
 
 question "What is your timezone?"
@@ -107,7 +113,9 @@ pacman -S --noconfirm grub os-prober efibootmgr
 
 mkdir -p /boot/efi
 
-mount -t vfat ${arch_disk} /boot/efi
+echo "${arch_disk}"
+
+mount -t vfat "${arch_disk}" /boot/efi
 
 mkdir -p /boot/efi/EFI
 
@@ -117,7 +125,7 @@ question "Enable including other OSes in GRUB boot list? [y/n]"
 read osprober
 
 if [ osprober == "y" ] ; then
-    sed -i "s/#GRUB_DISABLE_OS_PROBER/GRUB_DISABLE_OS_PROBER/g" /etc/default/grub
+    sed -i "s/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g" /etc/default/grub
 fi
 
 grub-mkconfig -o /boot/grub/grub.cfg

@@ -136,7 +136,7 @@ step "Packages installation"
 
 echo -e "${bold_red}Do not touch any keys during the packages are downloading!${reset}"
 
-pacstrap /mnt base linux linux-firmware dhcpcd man-db
+pacstrap /mnt base linux linux-firmware dhcpcd man-db nano
 
 echo -e "${bold_white}All the packages were successfully downloaded!${reset}"
 
