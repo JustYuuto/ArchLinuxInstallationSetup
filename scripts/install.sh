@@ -105,15 +105,15 @@ else
     parted $disk mklabel msdos # mbr
 fi
 
-# ESP               Type    Filesystem  Start  End
-parted $disk mkpart primary fat32       1M     300M
+# ESP               Type    Filesystem  Start    End
+parted $disk mkpart primary fat32       1MiB     300MiB
 parted $disk set 1 esp on
 
-# Swap partition (4G)
-parted $disk mkpart primary linux-swap  300M   4396M
+# Swap partition (4GiB)
+parted $disk mkpart primary linux-swap  300MiB   4396MiB
 
 # FS
-parted $disk mkpart primary ext4        4396M  100%
+parted $disk mkpart primary ext4        4396MiB  100%
 
 echo -e "Disk successfully partitionned without errors."
 
