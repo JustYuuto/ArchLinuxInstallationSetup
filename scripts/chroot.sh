@@ -113,9 +113,7 @@ pacman -S --noconfirm grub os-prober efibootmgr
 
 mkdir -p /boot/efi
 
-echo "${arch_disk}"
-
-mount -t vfat "${arch_disk}" /boot/efi
+mount -t vfat "${arch_disk}1" /boot/efi
 
 mkdir -p /boot/efi/EFI
 
