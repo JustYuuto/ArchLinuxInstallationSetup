@@ -87,12 +87,13 @@ echo ""
 echo -e "${bold_red}WARNING: THE DISK WILL BE FORMATED! ALL DATA ON IT WILL BE LOST!${reset}"
 question "On which disk do you want to install Arch Linux?"
 while true ; do
-    read -t 9999999 disk
+    read disk
     case $disk in
-        "/dev/sd"* | "/dev/nvme"*) selected=1; break;;
-        *) echo -e "${bold_red}The selected disk does not exist! ${red}Please choose another disk.${reset}"; selected=0; ;;
+        "/dev/sd"* | "/dev/nvme"*) ; break;;
+        *) echo -e "${bold_red}The selected disk does not exist! ${red}Please choose another disk.${reset}"; ;;
     esac
 done
+export arch_disk="$disk"
 
 echo ""
 
